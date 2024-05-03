@@ -1,0 +1,116 @@
+@page
+@model GetCategoriesModel
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>@ViewData["Title"]</title>
+    <a href="/Category/CreateCategory" class="btn btn-primary">Add Category</a>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .category-id,
+        .category-name,
+        .category-date {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .category-id {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+<h1>@ViewData["Title"]</h1>
+
+<ul>
+    @foreach (var category in Model.Categories)
+    {
+        <li>
+            <div>
+                <span class="category-id">ID:</span> @category.Id <br/>
+                <span class="category-name">Category Name:</span> @category.CategoryName <br/>
+                <span class="category-date">Created At:</span> @category.CreateAt.ToString("yyyy-MM-dd HH:mm:ss") <br/>
+                <span class="category-date">Updated At:</span> @category.UpdateAt.ToString("yyyy-MM-dd HH:mm:ss") <br/>
+            </div>
+            <div class="btn-container">
+                <a href="/Category/GetCategoryById?id=@category.Id" class="btn btn-info">View</a>
+               <a asp-page="/Category/UpdateCategory" asp-route-id="@category.Id" class="btn btn-primary">Update</a>
+                <a href="/Category/DeleteCategory?id=@category.Id" class="btn btn-danger">Delete</a>
+            </div>
+        </li>
+    }
+</ul>
+
+</body>
+</html>
