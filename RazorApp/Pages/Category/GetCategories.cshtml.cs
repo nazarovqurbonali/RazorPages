@@ -1,28 +1,40 @@
+using System.Net;
 using Domain.DTOs.CategoryDTOs;
 using Domain.Filters;
 using Infrastructure.Services.CategoryService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace RazorApp.Pages.Category;
-[IgnoreAntiforgeryToken]
-public class GetCategoriesModel : PageModel
+namespace RazorApp.Pages.Category
 {
-    private readonly ICategoryService _categoryService;
-
-    public GetCategoriesModel(ICategoryService categoryService)
+    public class GetCategoriesModel : PageModel
     {
-        _categoryService = categoryService;
-        Categories = new List<GetCategoryDto>();
-    }
+        private readonly ICategoryService _categoryService;
 
-    public List<GetCategoryDto> Categories { get; set; }
+        public GetCategoriesModel(ICategoryService categoryService)
+        {
+            _categoryService = categoryService;
+        }
 
-    public async Task<IActionResult> OnGetAsync()
-    {
-        var response = await _categoryService.GetCategoriesAsync(new CategoryFilter());
-        Categories = response.Data;
+        [BindProperty(SupportsGet = true)]
+        public CategoryFilter Filter { get; set; }
 
-        return Page();
+        public List<GetCategoryDto> Categories { get; set; }
+        public int TotalPages { get; set; }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            try
+            {
+                var response = await _categoryService.GetCategoriesAsync(Filter);
+                Categories = response.Data;
+                TotalPages = response.TotalPages;
+                return Page();
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }

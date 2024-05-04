@@ -35,7 +35,7 @@ public class CategoryService : ICategoryService
             if (!string.IsNullOrEmpty(filter.CategoryName))
                 categories = categories.Where(x => x.CategoryName.ToLower().Contains(filter.CategoryName.ToLower()));
             var result = await categories.Skip((filter.PageNumber - 1) * filter.PageSize).Take(filter.PageSize)
-                .ToListAsync();
+                .OrderBy(x=>x.Id).ToListAsync();
             var total = await categories.CountAsync();
 
             var response = _mapper.Map<List<GetCategoryDto>>(result);
